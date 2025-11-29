@@ -9,20 +9,56 @@
   "categories": [
     "Other"
   ],
-  "activationEvents": [],
+  "activationEvents": [
+    "onLanguage:javascript",
+    "onLanguage:typescript"
+  ],
   "main": "./dist/extension.js",
   "contributes": {
     "commands": [
       {
-        "command": "ai-unit-test-simulate.helloWorld",
-        "title": "Hello World"
+        "command": "extension.AITest",
+        "title": "AI Test",
+        "category": "Function Buttons"
       }
-    ]
+    ],
+    "languages": [
+      {
+        "id": "javascript",
+        "aliases": [
+          "JavaScript",
+          "javascript"
+        ],
+        "extensions": [
+          ".js"
+        ]
+      },
+      {
+        "id": "typescript",
+        "aliases": [
+          "TypeScript",
+          "typescript"
+        ],
+        "extensions": [
+          ".ts"
+        ]
+      }
+    ],
+    "configuration": {
+      "title": "Function Buttons",
+      "properties": {
+        "functionButtons.enabled": {
+          "type": "boolean",
+          "default": true,
+          "description": "启用函数按钮"
+        }
+      }
+    }
   },
   "scripts": {
-    "vscode:prepublish": "yarn run package",
-    "compile": "yarn run check-types && yarn run lint && node esbuild.js",
-    "watch": "npm-run-all -p watch:*",
+    "vscode:prepublish": "webpack --mode production",
+    "compile": "webpack --mode none",
+    "watch": "webpack --mode none --watch",
     "watch:esbuild": "node esbuild.js --watch",
     "watch:tsc": "tsc --noEmit --watch --project tsconfig.json",
     "package": "yarn run check-types && yarn run lint && node esbuild.js --production",
@@ -50,6 +86,8 @@
     "@types/express": "^5.0.5",
     "express": "^5.1.0",
     "openai": "^6.9.1",
+    "ts-loader": "^9.5.4",
+    "webpack": "^5.103.0",
     "zod": "^4.1.13"
   }
 }
