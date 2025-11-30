@@ -138,8 +138,12 @@ export class AITestCodeLensProvider implements vscode.CodeLensProvider {
 					}
 				} else {
 					// 统计大括号
-					if (char === "{") braceCount++;
-					if (char === "}") braceCount--;
+					if (char === "{") {
+						braceCount++;
+					}
+					if (char === "}") {
+						braceCount--;
+					}
 
 					// 找到匹配的结束大括号
 					if (braceCount === 0) {
@@ -152,7 +156,9 @@ export class AITestCodeLensProvider implements vscode.CodeLensProvider {
 				}
 			}
 
-			if (functionEnd) break;
+			if (functionEnd) {
+				break;
+			}
 		}
 
 		return functionStart && functionEnd
@@ -191,8 +197,8 @@ export class AITestCodeLensProvider implements vscode.CodeLensProvider {
 
 		// 创建 Codelens命令
 		const codeLens = new vscode.CodeLens(codeLensRange, {
-			title: "AITest",
-			command: "extension.AITest",
+			title: "生成注释",
+			command: "extension.ExplanatoryNote",
 		});
 		return codeLens;
 	}

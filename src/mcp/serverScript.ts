@@ -1,5 +1,5 @@
-import { getUnitTestMcpServer } from ".";
+import { getCodeAssistantMCPServer } from ".";
 
-getUnitTestMcpServer()
+getCodeAssistantMCPServer()
 	.start()
 	.catch((err) => console.error(err));
