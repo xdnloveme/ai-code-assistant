@@ -1,6 +1,9 @@
 import * as vscode from "vscode";
-import { AITestCodeLensProvider } from "./extension/codelensProvider";
-import { closeMCPClient, startMCPClient } from "./client";
+import {
+	closeMCPClient,
+	startMCPClient,
+	AITestCodeLensProvider,
+} from "./client";
 import { closeCodeAssistantMCPServer } from "./mcp";
 
 export async function activate(context: vscode.ExtensionContext) {
@@ -19,7 +22,7 @@ export async function activate(context: vscode.ExtensionContext) {
 
 	// 注册命令
 	const testFunctionCommand = vscode.commands.registerCommand(
-		"extension.AITest",
+		"extension.ExplanatoryNote",
 		async (uri: vscode.Uri, range: vscode.Range, functionName: string) => {
 			// 为用户提示信息
 			vscode.window.showInformationMessage(

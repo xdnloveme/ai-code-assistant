@@ -17,9 +17,9 @@
   "contributes": {
     "commands": [
       {
-        "command": "extension.AITest",
-        "title": "AI Test",
-        "category": "Function Buttons"
+        "command": "extension.ExplanatoryNote",
+        "title": "生成注释",
+        "category": "explanatory note"
       }
     ],
     "languages": [
@@ -50,7 +50,7 @@
         "functionButtons.enabled": {
           "type": "boolean",
           "default": true,
-          "description": "启用函数按钮"
+          "description": "explanatory note"
         }
       }
     }
