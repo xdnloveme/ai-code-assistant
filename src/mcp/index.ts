@@ -1,4 +1,4 @@
-import { UnitTestMCPServer } from "./UnitTestMCPServer";
+import { UnitTestMCPServer } from "./UnitTestMcpServer";
 
 let unitTestMcpServer: UnitTestMCPServer;
 
