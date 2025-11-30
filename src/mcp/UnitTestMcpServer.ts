@@ -1,43 +1,47 @@
-import type {
+import {
 	McpServer,
 	RegisteredResourceTemplate,
 	RegisteredTool,
 } from "@modelcontextprotocol/sdk/server/mcp.js";
-import {
-	closeHttpServer,
-	closeMcpServer,
-	createMcpServer,
-	startHttpServer,
-} from "./server";
 import { RunTool } from "./tools";
 import { ProjectResource } from "./resource/projectResource";
+import { StdioServerTransport } from "@modelcontextprotocol/sdk/server/stdio.js";
 
-export class UnitTestMcpServer {
-	private static singleton: UnitTestMcpServer;
+export class UnitTestMCPServer {
+	private static singleton: UnitTestMCPServer;
 
 	private mcp!: McpServer;
+	private transport?: StdioServerTransport;
 	private tools: { [k in string]: RegisteredTool } = {};
 	private resources: { [k in string]: RegisteredResourceTemplate } = {};
 
 	constructor() {
-		if (UnitTestMcpServer.singleton) {
-			return UnitTestMcpServer.singleton;
+		if (UnitTestMCPServer.singleton) {
+			return UnitTestMCPServer.singleton;
 		}
 
-		this.mcp = createMcpServer("1.0.0");
-		UnitTestMcpServer.singleton = this;
+		this.mcp = new McpServer({
+			name: "ai-unit-test-simulate-server",
+			version: "1.0.0",
+		});
+		UnitTestMCPServer.singleton = this;
+		return this;
 	}
 
-	public start() {
-		const mcp = this.getMCPServer();
-		if (!mcp) {
+	public async start() {
+		if (!this.mcp) {
 			throw new Error("mcp instance must be initialized");
 		}
 
 		this._registeTools();
 		this._registeResources();
 
-		startHttpServer();
+		this.transport = new StdioServerTransport();
+		const transport = this.transport;
+		await this.mcp.connect(this.transport);
+		await transport.start();
+
+		console.log("MCP server running.....");
 	}
 
 	private _registeTools() {
@@ -56,12 +60,26 @@ export class UnitTestMcpServer {
 		this.resources[resources.getToolName()] = _resourceRegister;
 	}
 
-	public close() {
-		closeMcpServer();
+	async __INTERNAL_closeMcpServer() {
+		if (!this.mcp) {
+			console.error("Mcp server dose not exists!");
+			return;
+		}
+
+		await this.mcp.close();
+		this.mcp = undefined!;
+	}
+
+	public async close() {
+		await this.__INTERNAL_closeMcpServer();
 		this.mcp = undefined!;
 		this.tools = {};
 		this.resources = {};
-		closeHttpServer();
+
+		if (this.transport) {
+			await this.transport.close();
+			this.transport = undefined;
+		}
 	}
 
 	public getMCPServer() {
