@@ -1,7 +1,7 @@
 import * as vscode from "vscode";
 import { AITestCodeLensProvider } from "./extension/codelensProvider";
 import { closeMCPClient, startMCPClient } from "./client";
-import { closeUnitTestMcpServer } from "./mcp";
+import { closeCodeAssistantMCPServer } from "./mcp";
 
 export async function activate(context: vscode.ExtensionContext) {
 	let aiTestCodeLensProvider: AITestCodeLensProvider;
@@ -39,5 +39,5 @@ export async function activate(context: vscode.ExtensionContext) {
 // This method is called when your extension is deactivated
 export async function deactivate() {
 	await closeMCPClient();
-	await closeUnitTestMcpServer();
+	await closeCodeAssistantMCPServer();
 }
