@@ -1,27 +1,39 @@
 import * as vscode from "vscode";
-import { closeUnitTestMcpServer } from "./mcp";
+import { AITestCodeLensProvider } from "./extension/codelensProvider";
 import { closeMCPClient, startMCPClient } from "./client";
+import { closeUnitTestMcpServer } from "./mcp";
 
-// This method is called when your extension is activated
-// Your extension is activated the very first time the command is executed
 export async function activate(context: vscode.ExtensionContext) {
-	const client = await startMCPClient();
-	const disposable = vscode.commands.registerCommand(
-		"ai-unit-test-simulate.createUnitTest",
-		() => {
-			client
-				.getClient()
-				.listTools()
-				.then((list) => {
-					console.log(
-						"可用tools",
-						list.tools.map((t) => t.name)
-					);
-				});
+	let aiTestCodeLensProvider: AITestCodeLensProvider;
+	// 创建 CodeLens提供器
+	aiTestCodeLensProvider = new AITestCodeLensProvider();
+
+	// 注册 CodeLens提供器
+	const codelensProvider = vscode.languages.registerCodeLensProvider(
+		[
+			{ scheme: "file", language: "javascript" },
+			{ scheme: "file", language: "typescript" },
+		],
+		aiTestCodeLensProvider
+	);
+
+	// 注册命令
+	const testFunctionCommand = vscode.commands.registerCommand(
+		"extension.AITest",
+		async (uri: vscode.Uri, range: vscode.Range, functionName: string) => {
+			// 为用户提示信息
+			vscode.window.showInformationMessage(
+				`测试函数: ${uri}, ${range}, ${functionName}`
+			);
+			// 这里可以添加测试逻辑
 		}
 	);
 
-	context.subscriptions.push(disposable);
+	const client = await startMCPClient();
+
+	// 注册所有命令
+	context.subscriptions.push(testFunctionCommand);
+	return codelensProvider;
 }
 
 // This method is called when your extension is deactivated
