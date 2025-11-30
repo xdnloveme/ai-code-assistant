@@ -11,7 +11,7 @@ export class MCPClient {
 
 	constructor() {
 		this.client = new Client({
-			name: "ai-unit-test-simulate-client",
+			name: "ai-code-assistant-client",
 			version: "1.0.0",
 		});
 	}

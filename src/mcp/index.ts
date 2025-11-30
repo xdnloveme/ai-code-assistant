@@ -1,18 +1,18 @@
-import { UnitTestMCPServer } from "./UnitTestMCPServer";
+import { CodeAssistantMCPServer } from "./CodeAssistantMCPServer";
 
-let unitTestMcpServer: UnitTestMCPServer;
+let codeAssistantMCPServer: CodeAssistantMCPServer;
 
-export function getUnitTestMcpServer() {
-	if (!unitTestMcpServer) {
-		unitTestMcpServer = new UnitTestMCPServer();
+export function getCodeAssistantMCPServer() {
+	if (!codeAssistantMCPServer) {
+		codeAssistantMCPServer = new CodeAssistantMCPServer();
 	}
 
-	return unitTestMcpServer;
+	return codeAssistantMCPServer;
 }
 
-export async function closeUnitTestMcpServer() {
-	if (unitTestMcpServer) {
-		await unitTestMcpServer.close();
-		unitTestMcpServer = undefined!;
+export async function closeCodeAssistantMCPServer() {
+	if (codeAssistantMCPServer) {
+		await codeAssistantMCPServer.close();
+		codeAssistantMCPServer = undefined!;
 	}
 }

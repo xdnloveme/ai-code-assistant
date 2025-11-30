@@ -7,8 +7,8 @@ import { RunTool } from "./tools";
 import { ProjectResource } from "./resource/projectResource";
 import { StdioServerTransport } from "@modelcontextprotocol/sdk/server/stdio.js";
 
-export class UnitTestMCPServer {
-	private static singleton: UnitTestMCPServer;
+export class CodeAssistantMCPServer {
+	private static singleton: CodeAssistantMCPServer;
 
 	private mcp!: McpServer;
 	private transport?: StdioServerTransport;
@@ -16,15 +16,15 @@ export class UnitTestMCPServer {
 	private resources: { [k in string]: RegisteredResourceTemplate } = {};
 
 	constructor() {
-		if (UnitTestMCPServer.singleton) {
-			return UnitTestMCPServer.singleton;
+		if (CodeAssistantMCPServer.singleton) {
+			return CodeAssistantMCPServer.singleton;
 		}
 
 		this.mcp = new McpServer({
-			name: "ai-unit-test-simulate-server",
+			name: "ai-code-assistant-server",
 			version: "1.0.0",
 		});
-		UnitTestMCPServer.singleton = this;
+		CodeAssistantMCPServer.singleton = this;
 		return this;
 	}
 

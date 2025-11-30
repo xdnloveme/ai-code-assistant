@@ -1,7 +1,7 @@
 {
-  "name": "ai-unit-test-simulate",
-  "displayName": "ai-unit-test-simulate",
-  "description": "An AI-based unit testing and simulation plugin",
+  "name": "ai-code-assistant",
+  "displayName": "ai-code-assistant",
+  "description": "An AI-based unit testing and simulation coder assistant",
   "version": "0.0.1",
   "engines": {
     "vscode": "^1.106.1"
