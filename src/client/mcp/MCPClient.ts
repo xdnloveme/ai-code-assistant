@@ -1,6 +1,5 @@
 import { Client } from "@modelcontextprotocol/sdk/client/index.js";
 import { StdioClientTransport } from "@modelcontextprotocol/sdk/client/stdio.js";
-import { spawn } from "child_process";
 
 import path from "path";
 
@@ -68,5 +67,7 @@ export class MCPClient {
 		return this.__INTERNAL_running;
 	}
 
-	sendRequest(method: string, params: object) {}
+	sendRequest = (...args: Parameters<Client["request"]>) => {
+		return this.client.request(...args);
+	};
 }

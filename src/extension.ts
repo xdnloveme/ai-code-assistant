@@ -5,6 +5,10 @@ import {
 	AITestCodeLensProvider,
 } from "./client";
 import { closeCodeAssistantMCPServer } from "./mcp";
+import {
+	CallToolResultSchema,
+	ListToolsResultSchema,
+} from "@modelcontextprotocol/sdk/types.js";
 
 export async function activate(context: vscode.ExtensionContext) {
 	let aiTestCodeLensProvider: AITestCodeLensProvider;
@@ -20,19 +24,33 @@ export async function activate(context: vscode.ExtensionContext) {
 		aiTestCodeLensProvider
 	);
 
+	const client = await startMCPClient();
+
 	// 注册命令
 	const testFunctionCommand = vscode.commands.registerCommand(
 		"extension.ExplanatoryNote",
-		async (uri: vscode.Uri, range: vscode.Range, functionName: string) => {
-			// 为用户提示信息
-			vscode.window.showInformationMessage(
-				`测试函数: ${uri}, ${range}, ${functionName}`
+		async (uri: vscode.Uri, text: string) => {
+			// List available tools
+			const toolList = await client.sendRequest(
+				{ method: "tools/list" },
+				ListToolsResultSchema
 			);
-			// 这里可以添加测试逻辑
+			console.log("toolList", toolList);
+			const result = await client.sendRequest(
+				{
+					method: "tools/call",
+					params: {
+						name: "annotation-generate",
+						arguments: {
+							text: `"${text}"`,
+						},
+					},
+				},
+				CallToolResultSchema
+			);
+			console.log(result);
 		}
 	);
-
-	const client = await startMCPClient();
 
 	// 注册所有命令
 	context.subscriptions.push(testFunctionCommand);

@@ -3,7 +3,7 @@ import {
 	RegisteredResourceTemplate,
 	RegisteredTool,
 } from "@modelcontextprotocol/sdk/server/mcp.js";
-import { RunTool } from "./tools";
+import { Annotation‌Tool } from "./tools";
 import { ProjectResource } from "./resource/projectResource";
 import { StdioServerTransport } from "@modelcontextprotocol/sdk/server/stdio.js";
 
@@ -46,10 +46,10 @@ export class CodeAssistantMCPServer {
 
 	private _registeTools() {
 		// run tool
-		const runTool = new RunTool(this.mcp);
-		const _runToolRegister = runTool.registe();
+		const annotation‌Tool = new Annotation‌Tool(this.mcp);
+		const _annotation‌Registe = annotation‌Tool.registe();
 
-		this.tools[runTool.getToolName()] = _runToolRegister;
+		this.tools[annotation‌Tool.getToolName()] = _annotation‌Registe;
 	}
 
 	private _registeResources() {
