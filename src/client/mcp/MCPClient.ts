@@ -1,5 +1,6 @@
 import { Client } from "@modelcontextprotocol/sdk/client/index.js";
 import { StdioClientTransport } from "@modelcontextprotocol/sdk/client/stdio.js";
+import { AnySchema } from "@modelcontextprotocol/sdk/server/zod-compat.js";
 
 import path from "path";
 
@@ -69,5 +70,9 @@ export class MCPClient {
 
 	sendRequest = (...args: Parameters<Client["request"]>) => {
 		return this.client.request(...args);
+	};
+
+	readResource = (...args: Parameters<Client["readResource"]>) => {
+		return this.client.readResource(...args);
 	};
 }

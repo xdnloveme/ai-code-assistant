@@ -1,5 +1,4 @@
 import * as ts from "typescript";
-import * as vscode from "vscode";
 import {
 	ClassInfo,
 	ExportInfo,
@@ -70,7 +69,7 @@ export class ASTParser {
 
 		// 解析导入声明
 		if (ts.isImportDeclaration(node)) {
-			const importInfo = this.parseImportDeclaration(node);
+			const importInfo = this.parseImportDeclaration(node, sourceFile);
 			result.imports.push(importInfo);
 		}
 
@@ -283,8 +282,13 @@ export class ASTParser {
 		};
 	}
 
-	private parseImportDeclaration(node: ts.ImportDeclaration): ImportInfo {
-		const moduleName = node.moduleSpecifier.getText().replace(/['"]/g, "");
+	private parseImportDeclaration(
+		node: ts.ImportDeclaration,
+		sourceFile: ts.SourceFile
+	): ImportInfo {
+		const moduleName = node.moduleSpecifier
+			.getText(sourceFile)
+			.replace(/['"]/g, "");
 		const importClause = node.importClause;
 		let defaultImport: string | null = null;
 		const namedImports: string[] = [];
@@ -354,16 +358,17 @@ export class ASTParser {
 	private getNodeLocation(
 		node: ts.Node,
 		sourceFile: ts.SourceFile
-	): Location {
-		const { line: startLine, character: startCharacter } =
-			sourceFile.getLineAndCharacterOfPosition(
-				node.getStart(sourceFile, false)
-			);
-		const { line: endLine, character: endCharacter } =
-			sourceFile.getLineAndCharacterOfPosition(node.getEnd());
+	): {
+		start: ts.LineAndCharacter;
+		end: ts.LineAndCharacter;
+	} {
+		const start = sourceFile.getLineAndCharacterOfPosition(
+			node.getStart(sourceFile, false)
+		);
+		const end = sourceFile.getLineAndCharacterOfPosition(node.getEnd());
 		return {
-			start: new vscode.Position(startLine, startCharacter),
-			end: new vscode.Position(endLine, endCharacter),
+			start,
+			end,
 		};
 	}
 }

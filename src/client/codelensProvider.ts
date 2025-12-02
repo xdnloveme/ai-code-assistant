@@ -1,9 +1,12 @@
 import * as vscode from "vscode";
-import { ASTParser } from "./utils/parser/ASTAccessor";
-import { ASTParseResult } from "./utils/parser/types/ASTInfoType";
+import { FunctionInfo } from "../mcp/utils/parser/types/ASTInfoType";
+import { MCPClient } from "./mcp/MCPClient";
+import { CallToolResultSchema } from "@modelcontextprotocol/sdk/types.js";
 
 // 主Provider：在函数上方增加AITest按钮
-export class AITestCodeLensProvider implements vscode.CodeLensProvider {
+export class CodeLensProvider implements vscode.CodeLensProvider {
+	constructor(private mcpClient: MCPClient) {}
+
 	// 允许插件在适当时候刷新CodeLens
 	private _onDidChangeCodeLenses = new vscode.EventEmitter<void>();
 	public readonly onDidChangeCodeLenses?: vscode.Event<void> | undefined =
@@ -54,24 +57,38 @@ export class AITestCodeLensProvider implements vscode.CodeLensProvider {
 		switch (document.languageId) {
 			// case "javascript":
 			case "typescript":
-				const astParser = new ASTParser();
-				const result = astParser.parseFile(
-					document.uri.path,
-					document.getText()
+				const result = await this.mcpClient.sendRequest(
+					{
+						method: "tools/call",
+						params: {
+							name: "analysis-function-in-code-ast",
+							arguments: {
+								code: `${document.getText()}`,
+								language: "typescript",
+								fileName: document.uri.path,
+							},
+						},
+					},
+					CallToolResultSchema
 				);
-				return this.parseTypescriptFunctions(result);
+				const parsedResult = JSON.parse(result.content[0].text);
+				return this.parseTypescriptFunctions(parsedResult.functions);
 			default:
 				return [];
 		}
 	}
 
 	// JavaScript/TypeScript函数解析
-	private parseTypescriptFunctions(result: ASTParseResult): vscode.Range[] {
+	private parseTypescriptFunctions(result: FunctionInfo[]): vscode.Range[] {
 		const functionRanges: vscode.Range[] = [];
 
-		result.functions.forEach((func) => {
+		result.forEach((func) => {
 			const loc = func.location;
-			functionRanges.push(new vscode.Range(loc.start, loc.end));
+			const range = new vscode.Range(
+				new vscode.Position(loc.start.line, loc.start.character),
+				new vscode.Position(loc.end.line, loc.end.character)
+			);
+			functionRanges.push(range);
 		});
 
 		return functionRanges;

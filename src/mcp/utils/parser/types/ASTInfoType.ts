@@ -1,4 +1,9 @@
-import { Position } from "vscode";
+import ts from "typescript";
+
+export interface Location {
+	start: ts.LineAndCharacter;
+	end: ts.LineAndCharacter;
+}
 
 export interface ASTParseResult {
 	functions: FunctionInfo[];
@@ -59,9 +64,4 @@ export interface ExportInfo {
 	isTypeOnly: boolean;
 	isDefault: boolean;
 	kind: "function" | "class" | "variable" | "type";
-}
-
-export interface Location {
-	start: Position;
-	end: Position;
 }

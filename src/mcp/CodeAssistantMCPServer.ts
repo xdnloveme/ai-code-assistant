@@ -1,9 +1,10 @@
 import {
 	McpServer,
 	RegisteredResourceTemplate,
+	RegisteredResource,
 	RegisteredTool,
 } from "@modelcontextprotocol/sdk/server/mcp.js";
-import { Annotation‌Tool } from "./tools";
+import { Analysis‌FunctionTool } from "./tools";
 import { ProjectResource } from "./resource/projectResource";
 import { StdioServerTransport } from "@modelcontextprotocol/sdk/server/stdio.js";
 
@@ -13,7 +14,7 @@ export class CodeAssistantMCPServer {
 	private mcp!: McpServer;
 	private transport?: StdioServerTransport;
 	private tools: { [k in string]: RegisteredTool } = {};
-	private resources: { [k in string]: RegisteredResourceTemplate } = {};
+	private resources: { [k in string]: RegisteredResourceTemplate | RegisteredResource } = {};
 
 	constructor() {
 		if (CodeAssistantMCPServer.singleton) {
@@ -23,6 +24,10 @@ export class CodeAssistantMCPServer {
 		this.mcp = new McpServer({
 			name: "ai-code-assistant-server",
 			version: "1.0.0",
+		}, {
+			capabilities: {
+				resources: {}
+			}
 		});
 		CodeAssistantMCPServer.singleton = this;
 		return this;
@@ -33,8 +38,8 @@ export class CodeAssistantMCPServer {
 			throw new Error("mcp instance must be initialized");
 		}
 
-		this._registeTools();
 		this._registeResources();
+		this._registeTools();
 
 		this.transport = new StdioServerTransport();
 		const transport = this.transport;
@@ -46,10 +51,10 @@ export class CodeAssistantMCPServer {
 
 	private _registeTools() {
 		// run tool
-		const annotation‌Tool = new Annotation‌Tool(this.mcp);
-		const _annotation‌Registe = annotation‌Tool.registe();
+		const analysis‌FunctionTool = new Analysis‌FunctionTool(this.mcp);
+		const _analysis‌FunctionTool = analysis‌FunctionTool.registe();
 
-		this.tools[annotation‌Tool.getToolName()] = _annotation‌Registe;
+		this.tools[analysis‌FunctionTool.getToolName()] = _analysis‌FunctionTool;
 	}
 
 	private _registeResources() {
