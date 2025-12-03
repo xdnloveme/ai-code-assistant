@@ -23,7 +23,7 @@ export class NoteCreateCommand extends BaseCommand {
 				);
 				const parsedResult = JSON.parse(result.content[0].text);
 				const result2 = await this.client.readResource({
-					uri: `file:///${vscode.workspace.asRelativePath(uri)}`,
+					uri: `file://${uri.path}`,
 				});
 				console.log(result2);
 			}
