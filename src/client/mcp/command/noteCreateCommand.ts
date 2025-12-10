@@ -1,6 +1,8 @@
 import * as vscode from "vscode";
 import { BaseCommand } from "./base";
 import { CallToolResultSchema } from "@modelcontextprotocol/sdk/types.js";
+import { createPrompt } from "../../readPrompts";
+import { setupOpenAI } from "../../../service/proxy";
 
 export class NoteCreateCommand extends BaseCommand {
 	registe(): vscode.Disposable {
@@ -22,6 +24,8 @@ export class NoteCreateCommand extends BaseCommand {
 					CallToolResultSchema
 				);
 				const parsedResult = JSON.parse(result.content[0].text);
+				const promptResult = await createPrompt(this.client, text);
+				await setupOpenAI(promptResult.messages);
 				const result2 = await this.client.readResource({
 					uri: `file://${uri.path}`,
 				});

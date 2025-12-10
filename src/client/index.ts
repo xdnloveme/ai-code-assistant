@@ -1,2 +1,2 @@
 export * from "./mcp";
-export * from "./codelensProvider";
+export * from "./providers/CommentButtonProvider";

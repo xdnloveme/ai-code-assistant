@@ -17,11 +17,13 @@ export class Analysis‌FunctionTool extends BaseTool<ReturnType<McpServer["regi
 					language: z.enum(['typescript', 'javascript']).describe('这是可以选择的代码语言类型，现在只支持typescript，javascript'),
 					fileName: z.string().describe('代码文件所属路径'),
 					config: z.object({
-						dependence: z.array(z.string()).optional().describe('这是代码的所有相关模块依赖文件地址'),
 						ast: z.boolean().describe('是否输出ast结构?')
 					}).optional()
 				},
-				outputSchema: { functions: z.array(z.object<FunctionInfo>()) },
+				outputSchema: { 
+					dependence: z.array(z.string()).optional().describe('这是代码的所有相关模块依赖文件地址'), 
+					functions: z.array(z.object<FunctionInfo>()) 
+				},
 			},
 			async ({ code, language, fileName, config = {} }) => {
 				const astParser = new ASTParser();

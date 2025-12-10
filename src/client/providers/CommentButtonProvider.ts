@@ -1,10 +1,16 @@
 import * as vscode from "vscode";
-import { FunctionInfo } from "../mcp/utils/parser/types/ASTInfoType";
-import { MCPClient } from "./mcp/MCPClient";
+import { FunctionInfo } from "../../mcp/utils/parser/types/ASTInfoType";
+import { MCPClient } from "../mcp/MCPClient";
 import { CallToolResultSchema } from "@modelcontextprotocol/sdk/types.js";
 
 // 主Provider：在函数上方增加AITest按钮
-export class CodeLensProvider implements vscode.CodeLensProvider {
+/**
+ * @returns
+ * @example
+ * @argument
+ * @description
+ */
+export class CommentButtonProvider implements vscode.CodeLensProvider {
 	constructor(private mcpClient: MCPClient) {}
 
 	// 允许插件在适当时候刷新CodeLens

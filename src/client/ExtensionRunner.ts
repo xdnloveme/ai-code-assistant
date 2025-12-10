@@ -1,8 +1,8 @@
 import * as vscode from "vscode";
 
-import { CodeLensProvider } from "./codelensProvider";
+import { CommentButtonProvider } from "./providers/CommentButtonProvider";
 import { MCPClient } from "./mcp/MCPClient";
-import { createCommands } from "./command";
+import { createCommands } from "./mcp/command";
 
 export class ExtensionContextRunner {
 	static instance: ExtensionContextRunner;
@@ -18,21 +18,21 @@ export class ExtensionContextRunner {
 		return ExtensionContextRunner.instance;
 	}
 
-	private codeLensProvider: CodeLensProvider | undefined;
+	private commentButtonProvider: CommentButtonProvider | undefined;
 
 	activate() {
 		// 注册命令
 		const subscriptions = createCommands(this.client).registe();
 		// 注册所有命令
 		this.context.subscriptions.push(...subscriptions);
-		this.codeLensProvider = new CodeLensProvider(this.client);
+		this.commentButtonProvider = new CommentButtonProvider(this.client);
 
 		return vscode.languages.registerCodeLensProvider(
 			[
 				{ scheme: "file", language: "javascript" },
 				{ scheme: "file", language: "typescript" },
 			],
-			this.codeLensProvider
+			this.commentButtonProvider
 		);
 	}
 

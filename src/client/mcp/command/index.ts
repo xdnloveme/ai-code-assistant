@@ -1,4 +1,4 @@
-import { MCPClient } from "../mcp/MCPClient";
+import { MCPClient } from "../MCPClient";
 import { NoteCreateCommand } from "./noteCreateCommand";
 import * as vscode from "vscode";
 

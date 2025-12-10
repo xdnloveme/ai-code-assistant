@@ -3,10 +3,12 @@ import {
 	RegisteredResourceTemplate,
 	RegisteredResource,
 	RegisteredTool,
+	RegisteredPrompt,
 } from "@modelcontextprotocol/sdk/server/mcp.js";
 import { Analysis‌FunctionTool } from "./tools";
 import { ProjectResource } from "./resource/projectResource";
 import { StdioServerTransport } from "@modelcontextprotocol/sdk/server/stdio.js";
+import { CommentPrompt } from "./prompt";
 
 export class CodeAssistantMCPServer {
 	private static singleton: CodeAssistantMCPServer;
@@ -15,6 +17,7 @@ export class CodeAssistantMCPServer {
 	private transport?: StdioServerTransport;
 	private tools: { [k in string]: RegisteredTool } = {};
 	private resources: { [k in string]: RegisteredResourceTemplate | RegisteredResource } = {};
+	private prompts: { [k in string]: RegisteredPrompt} = {};
 
 	constructor() {
 		if (CodeAssistantMCPServer.singleton) {
@@ -26,7 +29,8 @@ export class CodeAssistantMCPServer {
 			version: "1.0.0",
 		}, {
 			capabilities: {
-				resources: {}
+				resources: {},
+				prompts: {},
 			}
 		});
 		CodeAssistantMCPServer.singleton = this;
@@ -40,6 +44,8 @@ export class CodeAssistantMCPServer {
 
 		this._registeResources();
 		this._registeTools();
+		this._registePrompts();
+		
 
 		this.transport = new StdioServerTransport();
 		const transport = this.transport;
@@ -63,6 +69,14 @@ export class CodeAssistantMCPServer {
 		const _resourceRegister = resources.registe();
 
 		this.resources[resources.getToolName()] = _resourceRegister;
+	}
+
+	private _registePrompts(){
+		// prompts
+		const prompts = new CommentPrompt(this.mcp);
+		const _promptRegister = prompts.registe();
+
+		this.prompts[prompts.getToolName()] = _promptRegister;
 	}
 
 	async __INTERNAL_closeMcpServer() {
