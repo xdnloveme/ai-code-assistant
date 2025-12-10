@@ -1,5 +1,5 @@
 import * as vscode from "vscode";
-import { MCPClient } from "../mcp/MCPClient";
+import type { MCPClient } from "../MCPClient";
 
 export abstract class BaseCommand {
 	constructor(private _client: MCPClient) {}

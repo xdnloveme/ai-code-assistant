@@ -3,7 +3,7 @@ import OpenAI from "openai";
 import { ChatCompletionMessageParam } from "openai/resources";
 
 const openai = new OpenAI({
-	apiKey: "sk-73b95147f112401b95963885ae1b42f4",
+	apiKey: process.env.DASHSCOPE_API_KEY,
 	baseURL: "https://dashscope.aliyuncs.com/compatible-mode/v1",
 });
 

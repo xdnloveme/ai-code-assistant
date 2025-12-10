@@ -21,8 +21,9 @@ export class CommentPrompt extends BasePrompt<RegisteredPrompt> {
 				},
 			},
 			async ({ code }): Promise<GetPromptResult> => {
-				const promptPath = path.join(
-					"/Users/jojo/Documents/ai-code-assistant/src/mcp/prompt/comment.txt"
+				const promptPath = path.resolve(
+					__dirname,
+					"./assets/comment.txt"
 				);
 				const commentPrompt = readFileSync(
 					promptPath.toString(),
